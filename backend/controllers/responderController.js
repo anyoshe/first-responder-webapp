@@ -17,6 +17,7 @@ const getProfile = async (req, res) => {
   }
 };
 
+
 // Update the profile of a responder
 const updateProfile = async (req, res) => {
   try {
@@ -76,19 +77,38 @@ const getRespondersInRadius = async (req, res) => {
   try {
     const { latitude, longitude, radius } = req.query;
 
-    // Convert the radius to meters
-    const radiusInMeters = radius * 1000;
+    if (!latitude || !longitude || !radius) {
+      return res.status(400).json({ message: 'Missing latitude, longitude, or radius' });
+    }
 
-    // Query responders in the radius
-    const responders = await Responder.find({
-      location: {
-        $geoWithin: {
-          $centerSphere: [
-            [longitude, latitude], // [longitude, latitude]
-            radiusInMeters / 6371 // Convert meters to radians
-          ]
-        }
-      }
+    const radiusInKm = parseFloat(radius); // Radius is in kilometers
+    const lat = parseFloat(latitude);
+    const lon = parseFloat(longitude);
+
+    // Fetch all responders (filter manually)
+    const allResponders = await Responder.find();
+
+    // Helper function to calculate the distance between two coordinates (Haversine formula)
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+      const R = 6371; // Earth's radius in km
+      const dLat = ((lat2 - lat1) * Math.PI) / 180;
+      const dLon = ((lon2 - lon1) * Math.PI) / 180;
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // Distance in km
+    };
+
+    // Filter responders within the radius
+    const responders = allResponders.filter((responder) => {
+      const [responderLat, responderLon] = responder.location
+        .split(',')
+        .map((coord) => parseFloat(coord.trim()));
+      const distance = calculateDistance(lat, lon, responderLat, responderLon);
+      return distance <= radiusInKm;
     });
 
     res.json({ responders });
@@ -99,6 +119,27 @@ const getRespondersInRadius = async (req, res) => {
 };
 
 
+// Get the responderId based on the userId
+const getResponderId = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find responder by userId
+    const responder = await Responder.findOne({ userId });
+
+    if (!responder) {
+      return res.status(404).json({ message: 'Responder not found' });
+    }
+
+    // Send the responderId as response
+    res.json({ responderId: responder._id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
   
-module.exports = { getProfile, updateProfile, checkProfileCompletion, getRespondersInRadius };
+module.exports = { getProfile, updateProfile, checkProfileCompletion, getRespondersInRadius, getResponderId };
 

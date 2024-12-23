@@ -158,20 +158,32 @@ const IncidentPanel = () => {
 
         {/* Google Map */}
         <div style={{ height: '300px', width: '100%' }}>
-          <GoogleMap
-            mapContainerStyle={{ width: '100%', height: '100%' }}
-            center={markerPosition || defaultCenter}
-            zoom={12}
-          >
-            {markerPosition && (
-              <Marker
-                position={markerPosition}
-                draggable={true}
-                onDragEnd={handleMarkerDragEnd}
-              />
-            )}
-          </GoogleMap>
-        </div>
+  <GoogleMap
+    mapContainerStyle={{ width: '100%', height: '100%' }}
+    center={markerPosition || defaultCenter}
+    zoom={12}
+    onClick={(e) => {
+      const newLat = e.latLng.lat();
+      const newLng = e.latLng.lng();
+      setMarkerPosition({ lat: newLat, lng: newLng });
+      setNewIncident({
+        ...newIncident,
+        lat: newLat,
+        lng: newLng,
+        location: `${newLat}, ${newLng}`,
+      });
+    }}
+  >
+    {markerPosition && (
+      <Marker
+        position={markerPosition}
+        draggable={true}
+        onDragEnd={handleMarkerDragEnd}
+      />
+    )}
+  </GoogleMap>
+</div>
+
 
         <select
           name="type"
