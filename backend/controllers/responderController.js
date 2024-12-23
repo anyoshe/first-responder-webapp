@@ -70,6 +70,35 @@ const checkProfileCompletion = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// Controller function to fetch responders within a given radius
+const getRespondersInRadius = async (req, res) => {
+  try {
+    const { latitude, longitude, radius } = req.query;
+
+    // Convert the radius to meters
+    const radiusInMeters = radius * 1000;
+
+    // Query responders in the radius
+    const responders = await Responder.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [
+            [longitude, latitude], // [longitude, latitude]
+            radiusInMeters / 6371 // Convert meters to radians
+          ]
+        }
+      }
+    });
+
+    res.json({ responders });
+  } catch (error) {
+    console.error('Error fetching responders:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
   
-module.exports = { getProfile, updateProfile, checkProfileCompletion };
+module.exports = { getProfile, updateProfile, checkProfileCompletion, getRespondersInRadius };
 

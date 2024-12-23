@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const protect = require('./middleware/authMiddleware');
 const dispatcherAuthRoutes = require('./routes/dispatcherAuthRoutes');
 const responderRoutes = require('./routes/responderRoutes');
+const incidentRoutes = require('./routes/incidentRoutes');
 const bodyParser = require("body-parser");
 const app = express();
 const mongoString = process.env.DATABASE_URL;
@@ -25,6 +26,7 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/auth/dispatcher', dispatcherAuthRoutes); 
 app.use('/api/responder', responderRoutes);
+app.use('/api', incidentRoutes);
 // Error Handler
 function errorHandler(err, req, res, next) {
   console.error(err.stack);

@@ -1,0 +1,179 @@
+/* Global reset for IncidentPanel */
+.incident-panel {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    background-color: #f4f4f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  .incident-panel h2 {
+    color: #333;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Incident creation form */
+  .incident-panel form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  .incident-panel form h3 {
+    color: #4A90E2;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .incident-panel form input,
+  .incident-panel form select,
+  .incident-panel form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .incident-panel form input[type="text"],
+  .incident-panel form textarea {
+    background-color: #fafafa;
+  }
+  
+  .incident-panel form select {
+    background-color: #ffffff;
+  }
+  
+  .incident-panel form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4A90E2;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .incident-panel form button:hover {
+    background-color: #357ABD;
+  }
+  
+  /* Filters */
+  .incident-panel .filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  
+  .incident-panel .filters select {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    width: 48%;
+  }
+  
+  .incident-panel .filters select:focus {
+    outline: none;
+    border-color: #4A90E2;
+  }
+  
+  /* Incident List */
+  .incident-panel .incident-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .incident-panel .incident-card {
+    background-color: #ffffff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .incident-panel .incident-card p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .incident-panel .incident-card p strong {
+    color: #4A90E2;
+  }
+  
+  .incident-panel .incident-card .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .incident-panel .incident-card .actions button {
+    padding: 8px 12px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #4A90E2;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .incident-panel .incident-card .actions button:hover {
+    background-color: #357ABD;
+  }
+  
+  .incident-panel .incident-card .actions button:disabled {
+    background-color: #bbb;
+    cursor: not-allowed;
+  }
+  
+  .incident-panel .incident-card .actions button:focus {
+    outline: none;
+  }
+  
+  /* Hover effects */
+  .incident-panel .incident-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .incident-panel {
+      width: 95%;
+    }
+  
+    .incident-panel .filters {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .incident-panel .filters select {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .incident-panel form button {
+      width: 100%;
+    }
+  
+    .incident-panel .incident-card {
+      padding: 10px;
+    }
+  
+    .incident-panel .incident-card .actions button {
+      padding: 6px 10px;
+    }
+  }
+  

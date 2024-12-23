@@ -6,6 +6,9 @@ import LoginSignup from './pages/LoginSignUp';
 import DispatcherLoginSignup from './pages/DispatcherLoginSignup';
 import ResponderDashboard from './components/ResponderDashboard';
 import ProfilePage from './pages/ProfilePage';
+import EmergencyDashboard from './components/EmergencyDashboard';
+import IncidentPanel from './pages/IncidentPanel';
+import GoogleMapWithResponders from './pages/ResponderMap';
 
 function App() {
   return (
@@ -16,6 +19,10 @@ function App() {
         <Route path="/login/dispatcher" element={<DispatcherLoginSignup />} />
         <Route path="/responder-dashboard" element={<ResponderDashboard />} />
         <Route path="/responder-profile" element={<ProfilePage />} />
+        <Route path="/dispatcher-dashboard" element={<EmergencyDashboard />} />
+        <Route path="/incident-panel" element={<IncidentPanel />} />
+        <Route path="/responder-panel" element={<GoogleMapWithResponders />} />
+
       </Routes>
     </Router>
   );
