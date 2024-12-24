@@ -3,6 +3,7 @@ const {
   getUnreadMessages,
   markMessageAsRead,
   getIncidentMessages,
+  updateMessageByIncidentId,
   getMessages,
   sendMessage,
 } = require('../controllers/messageController');
@@ -24,5 +25,10 @@ router.get('/incident/:incidentId', getIncidentMessages);
 
 // Route to send a new message
 router.post('/send', sendMessage);
+
+// Route to update a message by incidentId
+router.put('/:incidentId', updateMessageByIncidentId);
+
+
 
 module.exports = router;

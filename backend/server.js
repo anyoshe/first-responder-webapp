@@ -8,6 +8,7 @@ const dispatcherAuthRoutes = require('./routes/dispatcherAuthRoutes');
 const responderRoutes = require('./routes/responderRoutes');
 const incidentRoutes = require('./routes/incidentRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 const bodyParser = require("body-parser");
 const app = express();
 const mongoString = process.env.DATABASE_URL;
@@ -29,6 +30,7 @@ app.use('/api/auth/dispatcher', dispatcherAuthRoutes);
 app.use('/api/responder', responderRoutes);
 app.use('/api', incidentRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
 // Error Handler
 function errorHandler(err, req, res, next) {
   console.error(err.stack);

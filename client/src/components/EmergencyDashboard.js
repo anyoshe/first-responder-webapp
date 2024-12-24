@@ -1,65 +1,159 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/EmergencyDashboard.css';
 
 const EmergencyDashboard = () => {
   const [incidents, setIncidents] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [message, setMessage] = useState("");
   const [status, setStatus] = useState("Not Started");
+  const [currentNotificationId, setCurrentNotificationId] = useState(null);  // New state for storing current notification ID
   const navigate = useNavigate();
 
-  // Function to fetch incidents from the API
+  const chatSectionRef = useRef(null);
+
+  // Fetch incidents from the API
   const fetchIncidents = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/incidents');
       const data = await response.json();
-      setIncidents(data.incidents);
+      setIncidents(data.incidents || []);
     } catch (error) {
       console.error('Failed to fetch incidents', error);
     }
   };
 
-  // Fetch incidents when the component mounts
+  // Fetch Notifications (without full responder details)
+  const fetchNotifications = async (incidentId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/notifications/${incidentId}`);
+      const notification = response.data.notification;
+
+      notification.responderId = notification.responderId || 'N/A';
+      notification.attending = notification.attending || false;
+
+      setNotifications((prevNotifications) => [...prevNotifications, notification]);
+    } catch (error) {
+      console.error('Failed to fetch notifications', error);
+    }
+  };
+
+  // Fetch incidents and notifications when the component mounts
   useEffect(() => {
     fetchIncidents();
   }, []);
 
-  // Update the incident status and pass the location to the responder panel
-  // const updateStatus = async (incidentId, newStatus, location) => {
-  //   try {
-  //     const response = await fetch(`http://localhost:5000/api/incidents/${incidentId}`, {
-  //       method: 'PATCH',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ status: newStatus }),
-  //     });
+  useEffect(() => {
+    if (Array.isArray(incidents) && incidents.length > 0) {
+      incidents.forEach((incident) => {
+        fetchNotifications(incident._id);
+      });
+    }
+  }, [incidents]);
 
-  //     if (response.ok) {
-  //       // Navigate to responder panel and pass the location for mapping
-  //       navigate('/responder-panel', { state: { location } });
-  //     } else {
-  //       console.error('Failed to update incident status');
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to update status', error);
-  //   }
-  // };
-
-   // Define the updateStatus function
-   const updateStatus = (newStatus) => {
-    setStatus(newStatus); // Update the status when called
+  // Update the status when needed
+  const updateStatus = (newStatus) => {
+    setStatus(newStatus);
   };
 
-   // Function to navigate to the responder panel with location
-   const navigateToResponderPanel = (incidentId, incidentLocation) => {
-    // Navigate to the responder panel and pass the location and incident ID
+  // Navigate to responder panel
+  const navigateToResponderPanel = (incidentId, incidentLocation) => {
     navigate('/responder-panel', { state: { incidentId, incidentLocation } });
   };
+
+  // Handle notification click for communication
+  const handleNotificationClick = (notification) => {
+    console.log('Communication with responder:', notification.responderId);
+    setCurrentNotificationId(notification._id);  // Set the notificationId when starting a chat
+    navigate('/communication-panel', { state: { responder: notification.responderId } });
+  };
+
+  // Handle chat and set the first message
+  const handleChat = (notification) => {
+
+    //Set the notificationId when starting a chat
+  setCurrentNotificationId(notification._id); 
+    // Scroll to the communication section
+    chatSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+
+    // Set the initial chat message with responder info
+    const initialMessage = {
+      sender: notification.responderId,
+      message: notification.attending
+        ? `${notification.responderId} is attending to the incident.`
+        : `${notification.responderId} is not attending.`,
+    };
+
+    // Update the chatMessages state with the initial message
+    setChatMessages([initialMessage]);
+  };
+
+  // Handle the typing of a message
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+// Function to get the dispatcherId from localStorage
+const getDispatcherId = () => {
+  try {
+    const dispatcherId = localStorage.getItem("dispatcherId"); // Retrieve dispatcherId from localStorage
+    if (!dispatcherId) {
+      throw new Error("Dispatcher ID not found in localStorage");
+    }
+    return dispatcherId;
+  } catch (error) {
+    console.error("Error retrieving dispatcherId:", error.message);
+    return null;
+  }
+};
+
+// Send message to the responder's notification
+const sendMessage = async (notificationId) => {
+  if (!notificationId || notificationId === "null") {
+    alert("Invalid notification selected.");
+    return;
+  }
+
+  const dispatcherId = getDispatcherId(); // Retrieve dispatcherId dynamically
+  if (!dispatcherId) {
+    alert("Unable to send message: Dispatcher not logged in.");
+    return;
+  }
+
+  if (!message.trim()) {
+    alert("Message cannot be empty.");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `http://localhost:5000/api/notifications/${notificationId}/send-message`,
+      {
+        messageText: message,
+        dispatcherId, // Include dispatcherId in the request
+      }
+    );
+
+    // Update chat messages
+    const newMessage = {
+      sender: "Dispatcher",
+      message: message,
+    };
+    setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    // Clear the message input
+    setMessage("");
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+};
+
 
 
   return (
     <div className="emergency-dashboard">
-      {/* Header */}
       <header className="headerPart">
         <div className="logo-title">
           <span className="logo">🚨</span>
@@ -81,7 +175,6 @@ const EmergencyDashboard = () => {
         </div>
       </header>
 
-      {/* Sidebar */}
       <aside className="sidebar">
         <ul>
           <li>🏠 Dashboard Overview</li>
@@ -93,62 +186,95 @@ const EmergencyDashboard = () => {
         </ul>
       </aside>
 
-      {/* Main Section */}
       <main className="main-content">
-        {/* Incident Management Panel */}
         <section className="incident-panel">
           <h2>Incident Management</h2>
           <p>
             <Link to="/incident-panel">
-               List your incident details
+              List your incident details
             </Link>
           </p>
           <div className="incident-list">
-            {incidents.map((incident) => (
-              <div key={incident._id} className="incident-card">
-                <p><strong>ID:</strong> {incident.incidentId}</p>
-                <p><strong>Location:</strong> {incident.location}</p>
-                <p><strong>Type:</strong> {incident.type}</p>
-                <p><strong>Priority:</strong> {incident.priority}</p>
-                <p><strong>Status:</strong> {incident.status}</p>
-                <div className="actions">
-                  {/* When the 'Assign' button is clicked, it triggers updateStatus with incident location */}
-                  {/* <button onClick={() => updateStatus(incident._id, 'Assigned', incident.location)}>Assign</button> */}
-                  <button
-                    onClick={() =>
-                      navigateToResponderPanel(incident._id, incident.location)
-                    }
-                  >
-                    Assign
-                  </button>
-                  <button onClick={() => updateStatus(incident._id, 'Resolved')}>Resolve</button>
-                  <button onClick={() => updateStatus(incident._id, 'Escalated')}>Escalate</button>
+            {Array.isArray(incidents) && incidents.length > 0 ? (
+              incidents.map((incident) => (
+                <div key={incident._id} className="incident-card">
+                  <p><strong>ID:</strong> {incident.incidentId}</p>
+                  <p><strong>Location:</strong> {incident.location}</p>
+                  <p><strong>Type:</strong> {incident.type}</p>
+                  <p><strong>Priority:</strong> {incident.priority}</p>
+                  <p><strong>Status:</strong> {incident.status}</p>
+                  <div className="actions">
+                    <button
+                      onClick={() =>
+                        navigateToResponderPanel(incident._id, incident.location)
+                      }
+                    >
+                      Assign
+                    </button>
+                    <button onClick={() => updateStatus(incident._id, 'Resolved')}>Resolve</button>
+                    <button onClick={() => updateStatus(incident._id, 'Escalated')}>Escalate</button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No incidents to display.</p>
+            )}
           </div>
         </section>
 
-        {/* Responder Monitoring */}
         <section className="responder-panel">
           <h2>Responder Monitoring</h2>
-          <p>Live map integration here (e.g., Google Maps)</p>
+          {Array.isArray(notifications) && notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <div key={notification._id} className="responder-card">
+                <p>
+                  <strong>Responder ID:</strong> {notification.responderId || 'N/A'}
+                </p>
+                <p>
+                  <strong>Attending Status:</strong>
+                  {notification.attending ? 'Attending' : 'Not Attending'}
+                </p>
+                <p>
+                  <strong>Chat:</strong>
+                  <button
+                    onClick={() => handleChat(notification)}
+                    style={{ color: 'green' }}
+                  >
+                    Start Chat
+                  </button>
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No notifications available.</p>
+          )}
         </section>
 
-        {/* Communication Hub */}
-        <section className="communication-panel">
+        <section ref={chatSectionRef} className="communication-panel">
           <h2>Communication Hub</h2>
           <div className="chat-window">
-            <p><strong>Responder 1:</strong> On my way!</p>
-            <input type="text" placeholder="Type a message..." />
+            {/* Display chat messages dynamically */}
+            {chatMessages.length > 0 ? (
+              chatMessages.map((msg, index) => (
+                <p key={index}><strong>{msg.sender}:</strong> {msg.message}</p>
+              ))
+            ) : (
+              <p>No chat messages yet.</p>
+            )}
+            <input
+              type="text"
+              value={message}
+              onChange={handleMessageChange}
+              placeholder="Type a message..."
+            />
+            <button
+              onClick={() => sendMessage(currentNotificationId)}  // Pass the notificationId here
+            >
+              Send
+            </button>
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="footer">
-        <p>System Stable | Contact Admin | Help Center</p>
-      </footer>
     </div>
   );
 };

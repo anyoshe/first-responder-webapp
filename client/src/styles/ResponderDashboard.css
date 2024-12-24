@@ -203,3 +203,68 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
+
+.icon-container {
+  margin: 0 10px;
+  position: relative;
+}
+
+.unread-badge {
+  position: absolute;
+  top: -2px;
+  right: -1px;
+  background-color: red;
+  color: white;
+  padding: 3px 7px;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.notification-box {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+.notification-item {
+  margin: 10px 0;
+}
+
+.unread {
+  font-weight: bold;
+}
+
+.read {
+  color: gray;
+}
+
+.accept-btn,
+.reject-btn {
+  padding: 5px 10px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.accept-btn {
+  background-color: green;
+  color: white;
+}
+
+.reject-btn {
+  background-color: red;
+  color: white;
+}
+
+.active {
+  color: blue;
+  font-weight: bold;
+}

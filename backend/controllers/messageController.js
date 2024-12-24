@@ -67,6 +67,29 @@ const getMessages = async (req, res) => {
   }
 };
 
+const updateMessageByIncidentId = async (req, res) => {
+  try {
+    const { incidentId } = req.params; // Extract incidentId from the request parameters
+    const { read, attending } = req.body; // Extract updated fields from the request body
+
+    // Find the message by incidentId and update the specified fields
+    const updatedMessage = await Message.findOneAndUpdate(
+      { incidentId }, // Find by incidentId
+      { read, attending }, // Update these fields
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedMessage) {
+      return res.status(404).json({ success: false, message: 'Message not found' });
+    }
+
+    res.status(200).json({ success: true, message: 'Message updated successfully', data: updatedMessage });
+  } catch (error) {
+    console.error('Error updating message:', error);
+    res.status(500).json({ success: false, message: 'Error updating message', error });
+  }
+};
+
 
 module.exports = {
   getUnreadMessages,
@@ -74,4 +97,17 @@ module.exports = {
   getIncidentMessages,
   getMessages,
   sendMessage,
+  updateMessageByIncidentId,
+};
+
+// Create a new message
+exports.createMessage = async (req, res) => {
+  try {
+    const { sender, receiver, text, responderId, incidentId } = req.body;
+    const newMessage = new Message({ sender, receiver, text, responderId, incidentId });
+    await newMessage.save();
+    res.status(201).json(newMessage);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating message', error });
+  }
 };
