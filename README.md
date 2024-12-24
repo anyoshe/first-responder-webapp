@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+First Responder Web App
+Overview
+The First Responder Web App is designed to support emergency response teams, dispatchers, and responders by enabling efficient communication, incident management, and coordination during emergencies. It provides real-time updates, chat functionality, incident tracking, and tools to assist responders on the ground. The app integrates various features to ensure better decision-making, coordination, and assistance during emergencies.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Key Features
+For Responders:
+Real-Time Chat & Calls: Responders can communicate instantly with fellow responders and doctors to resolve technicalities during emergency responses.
+Hospital Mapping: In case an incident is far from available emergency vehicles, the app helps identify nearby hospitals and medical facilities for quicker assistance.
+Training & Updates: Responders have access to valuable training materials and field updates to stay informed on best practices and advancements.
+Incident Management: Responders can manage incidents in real-time, document progress, and escalate cases when necessary within the app.
+Community: Responders can always chat and a share experiences on the community that is more of whatsapp chats and grooups.
+For Dispatchers:
+Incident Mapping: Dispatchers can view responders' proximity to incidents and their professions, allowing for better incident allocation.
+Real-Time Alerts & Feedback: Dispatchers can send real-time alerts to responders, receiving feedback on whether they will attend the incident.
+Incident Tracking: Dispatchers can monitor how incidents are being handled and provide support when needed. THis goes along way to ensure that atleast all incidents are covered or attended to.
+Distance Calculation: Integrated with Google APIs, dispatchers can calculate the distance between responders and incidents to make more informed decisions. 
+Responder Motivation: Dispatchers can motivate responders and award credits for excellent performance.
+Technologies Used
+Frontend: React.js, Axios for API calls
+Backend: Node.js, Express
+Database: MongoDB
+Real-Time Communication: WebSockets or polling for real-time updates and messaging
+Google APIs: For distance calculation, hospital mapping, and incident proximity-based responder mapping.
+Authentication: JWT for secure login
+Cloud Services: For file storage and user authentication (optional, based on implementation)
+Installation
+Clone the repository:
+bash
+Copy code
+git clone https://github.com/anyoshe/first-responder-webapp.git
+Install dependencies for both frontend and backend:
+bash
+Copy code
+cd client
+npm install
+cd ../backend
+npm install
+Start the backend server:
+bash
+Copy code
+npm run start
+Start the React app:
+bash
+Copy code
+npm run dev
+API Endpoints
+Notifications
+GET /api/notifications/:userId: Fetch notifications for a specific user.
+POST /api/notifications: Create a new notification.
+PUT /api/notifications/:id: Update notification status (e.g., read/unread).
+Messages
+GET /api/messages/:incidentId: Fetch the conversation thread for a specific incident.
+POST /api/messages: Send a message for an incident.
+User Authentication
+POST /api/auth/login: Login user.
+POST /api/auth/signup: Register a new user.
+Incident Management
+GET /api/incidents: Get all incidents.
+POST /api/incidents: Create a new incident.
+PUT /api/incidents/:id: Update incident details.
+DELETE /api/incidents/:id: Delete an incident.
+Contributing
+The repo is under development 
+Contributions are welcome! Feel free to fork this repository, submit pull requests, and create issues to suggest new features or report bugs.
