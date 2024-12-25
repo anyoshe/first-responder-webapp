@@ -1,3 +1,6 @@
+# Node.js and NPM packages
+node_modules/
+
 # Operating system files
 Thumbs.db        # Windows
 
@@ -6,8 +9,6 @@ Thumbs.db        # Windows
 .idea/            # JetBrains IDEs (e.g., IntelliJ, WebStorm)
 *.swp             # Vim swap files
 
-# Node.js
-node_modules/     # Node.js dependencies
 
 
 # Java
