@@ -1,0 +1,11 @@
+# Node.js and NPM packages
+node_modules/
+
+# Build output for front-end apps
+/build/
+*/dist/
+*.log
+
+# Environment files
+.env              # Environment variables, often used for sensitive data
+

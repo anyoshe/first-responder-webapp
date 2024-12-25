@@ -1,0 +1,24 @@
+# Operating system files
+Thumbs.db        # Windows
+
+# IDE and editor settings
+.vscode/          # VSCode settings
+.idea/            # JetBrains IDEs (e.g., IntelliJ, WebStorm)
+*.swp             # Vim swap files
+
+# Node.js
+node_modules/     # Node.js dependencies
+
+
+# Java
+*.class           # Java class files
+*.jar             # Java archives
+
+# Build and temporary files
+/dist/            # Build directory
+/build/           # Build directory
+*.log             # Log files
+*.bak             # Backup files
+
+# Environment files
+.env              # Environment variables (often contains secrets)
