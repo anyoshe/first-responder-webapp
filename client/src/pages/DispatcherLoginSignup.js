@@ -16,8 +16,8 @@ const DispatcherLoginSignup = () => {
     e.preventDefault();
     try {
       const url = isSignup
-        ? 'http://localhost:5000/api/auth/dispatcher/signup'
-        : 'http://localhost:5000/api/auth/dispatcher/login';
+        ? `${process.env.REACT_APP_API_URL}/api/auth/dispatcher/signup`
+        : `${process.env.REACT_APP_API_URL}/api/auth/dispatcher/login`;
 
       const payload = isSignup
         ? { company, username, email, password }

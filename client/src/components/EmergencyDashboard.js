@@ -17,7 +17,7 @@ const EmergencyDashboard = () => {
   // Fetch incidents from the API
   const fetchIncidents = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/incidents');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents`);
       const data = await response.json();
       setIncidents(data.incidents || []);
     } catch (error) {
@@ -28,7 +28,7 @@ const EmergencyDashboard = () => {
   // Fetch Notifications (without full responder details)
   const fetchNotifications = async (incidentId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/notifications/${incidentId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/notifications/${incidentId}`);
       const notification = response.data.notification;
 
       notification.responderId = notification.responderId || 'N/A';
@@ -129,7 +129,7 @@ const sendMessage = async (notificationId) => {
 
   try {
     const response = await axios.post(
-      `http://localhost:5000/api/notifications/${notificationId}/send-message`,
+      `${process.env.REACT_APP_API_URL}/api/notifications/${notificationId}/send-message`,
       {
         messageText: message,
         dispatcherId, // Include dispatcherId in the request

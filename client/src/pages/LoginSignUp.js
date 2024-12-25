@@ -14,7 +14,7 @@ const LoginSignup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = isSignup ? 'http://localhost:5000/api/auth/signup' : 'http://localhost:5000/api/auth/login';
+      const url = isSignup ? `${process.env.REACT_APP_API_URL}/api/auth/signup` : `${process.env.REACT_APP_API_URL}/api/auth/login`;
       
       // Only include name if it's a signup request
       const userData = isSignup ? { email, password, name } : { email, password };
@@ -37,7 +37,7 @@ const LoginSignup = () => {
         console.log('User ID:', userId);
   
         try {
-          const profileResponse = await axios.get(`http://localhost:5000/api/responder/profile/${userId}`);
+          const profileResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/responder/profile/${userId}`);
           console.log('Profile Response:', profileResponse.data);
   
           if (profileResponse.data && profileResponse.data.isProfileComplete) {

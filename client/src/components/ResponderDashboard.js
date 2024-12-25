@@ -28,11 +28,11 @@ useEffect(() => {
 
     try {
       // Fetch responderId based on userId
-      const responderResponse = await axios.get(`http://localhost:5000/api/responder/responderId/${userId}`);
+      const responderResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/responder/responderId/${userId}`);
       const responderId = responderResponse.data.responderId;
 
       // Fetch all messages (chat messages and notifications)
-      const messagesResponse = await axios.get(`http://localhost:5000/api/messages`);
+      const messagesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/messages`);
       const allMessages = messagesResponse.data;
 
       // Separate notifications and messages
@@ -62,53 +62,6 @@ useEffect(() => {
 }, []);
 
 
-// Accept or reject a notification
-// const handleNotificationAction = async (notification, action) => {
-//   if (!notification) {
-//     console.error('Notification data is missing.');
-//     return;
-//   }
-
-//   try {
-//     const { responderId, incidentId, messageText } = notification;
-
-//     if (!responderId || !incidentId || !messageText) {
-//       throw new Error('Missing required notification data.');
-//     }
-
-//     const updatedReadStatus = true; // Mark as read
-//     const updatedAttendingStatus = action === 'accept'; // Accept or reject
-
-//     console.log('Processing notification:', { responderId, incidentId, messageText });
-
-//     // Step 1: Create a new notification
-//     await axios.post('http://localhost:5000/api/notifications', {
-//       responderId,
-//       incidentId,
-//       messageText,
-//       attending: updatedAttendingStatus,
-//       read: updatedReadStatus,
-//     });
-
-//     // Step 2: Update the corresponding message document
-//     await axios.put(`http://localhost:5000/api/messages/${incidentId}`, {
-//       read: updatedReadStatus,
-//       attending: updatedAttendingStatus,
-//     });
-
-//     // Step 3: Update local state
-//     setNotifications((prevNotifications) =>
-//       prevNotifications.map((notif) =>
-//         notif._id === notification._id
-//           ? { ...notif, read: updatedReadStatus, attending: updatedAttendingStatus }
-//           : notif
-//       )
-//     );
-//   } catch (error) {
-//     console.error(`Error updating notification status or creating new notification: ${error.message}`);
-//   }
-// };
-
 const handleNotificationAction = async (notification, action) => {
   if (!notification) {
     console.error('Notification data is missing.');
@@ -128,7 +81,7 @@ const handleNotificationAction = async (notification, action) => {
     console.log('Processing notification:', { responderId, incidentId, messageText });
 
     // Step 1: Create a new notification (Mark notification as read)
-    await axios.post('http://localhost:5000/api/notifications', {
+    await axios.post(`${process.env.REACT_APP_API_URL}/api/notifications`, {
       responderId,
       incidentId,
       messageText,
@@ -137,7 +90,7 @@ const handleNotificationAction = async (notification, action) => {
     });
 
     // Step 2: Update the corresponding message document
-    await axios.put(`http://localhost:5000/api/messages/${incidentId}`, {
+    await axios.put(`${process.env.REACT_APP_API_URL}/api/messages/${incidentId}`, {
       read: updatedReadStatus,
       attending: updatedAttendingStatus,
     });
@@ -165,7 +118,7 @@ const startConversationPolling = (incidentId) => {
   const interval = setInterval(async () => {
     try {
       // Fetch the latest conversation thread for the incident
-      const response = await axios.get(`http://localhost:5000/api/conversations/${incidentId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/conversations/${incidentId}`);
       const conversationThread = response.data.conversationThread;
 
       // If new messages are found, update the state and the notification icon
@@ -217,11 +170,11 @@ const startConversationPolling = (incidentId) => {
   
     try {
       // Fetch responderId based on userId
-      const responderResponse = await axios.get(`http://localhost:5000/api/responder/responderId/${userId}`);
+      const responderResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/responder/responderId/${userId}`);
       const responderId = responderResponse.data.responderId;
       console.log(responderId);
       // Fetch all messages
-      const messagesResponse = await axios.get('http://localhost:5000/api/messages');
+      const messagesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/messages`);
       const allMessages = messagesResponse.data;
      console.log(allMessages)
       // Filter messages for the current responder
@@ -249,7 +202,7 @@ const startConversationPolling = (incidentId) => {
     );
 
     // Mark the message as read on the server
-    axios.post(`http://localhost:5000/api/messages/${message._id}/read`).catch((error) => {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/messages/${message._id}/read`).catch((error) => {
       console.error('Error marking message as read:', error);
     });
   };
@@ -262,7 +215,7 @@ const startConversationPolling = (incidentId) => {
 
     try {
       const newMessage = { sender: "Responder", receiver: selectedChat, text }; // Adjust sender/receiver logic
-      const response = await axios.post('http://localhost:5000/api/messages', newMessage);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/messages`, newMessage);
 
       console.log('Messages:', messages);
 

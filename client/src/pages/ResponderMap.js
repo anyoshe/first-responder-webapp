@@ -51,7 +51,7 @@ const GoogleMapWithResponders = () => {
     const fetchResponders = async () => {
       setLoadingResponders(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/responder/nearby', {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/responder/nearby`, {
           params: {
             latitude: parsedLocation.lat,
             longitude: parsedLocation.lng,
@@ -90,7 +90,7 @@ const GoogleMapWithResponders = () => {
     const updateIncidentStatus = async () => {
       try {
         // Step 1: Update the incident status to 'Assigned'
-        await axios.patch(`http://localhost:5000/api/incidents/assign`, {
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/incidents/assign`, {
           responderId,
           incidentId, // assuming this is available in the component
         });
@@ -113,7 +113,7 @@ const GoogleMapWithResponders = () => {
         }
   
         // Step 1: Fetch all nearby responders using the radius
-        const response = await axios.get("http://localhost:5000/api/responder/nearby", {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/responder/nearby`, {
           params: {
             latitude: parsedLocation.lat,
             longitude: parsedLocation.lng,
@@ -143,7 +143,7 @@ const GoogleMapWithResponders = () => {
         }
   
         // Step 3: Update the incident status and assign all responders within the radius
-        await axios.patch(`http://localhost:5000/api/incidents/assign-all`, {
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/incidents/assign-all`, {
           incidentId,
           responders: respondersInRange, // Send only the filtered responders
         });

@@ -58,7 +58,7 @@ const IncidentPanel = () => {
   const fetchIncidents = async () => {
         try {
           const query = new URLSearchParams(filters).toString();
-          const response = await fetch(`http://localhost:5000/api/incidents?${query}`);
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents?${query}`);
           const data = await response.json();
           setIncidents(data.incidents);
         } catch (error) {
@@ -68,7 +68,7 @@ const IncidentPanel = () => {
     
       const updateStatus = async (id, status) => {
         try {
-          const response = await fetch(`http://localhost:5000/api/incidents/${id}/status`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents/${id}/status`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status }),
@@ -93,7 +93,7 @@ const IncidentPanel = () => {
   const createIncident = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/incidents', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newIncident),
